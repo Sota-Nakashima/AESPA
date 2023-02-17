@@ -16,6 +16,31 @@ echo $conda_init_path
 readonly SCRIPT_NAME=${0##*/}
 readonly VERSION=0.1.0
 
+realpath() {
+  case "$1" in /*) ;; *) printf '%s/' "$PWD";; esac; echo "$1"
+}
+
+print_version()
+{
+    cat << END
+$SCRIPT_NAME version $VERSION
+END
+}
+
+print_help()
+{
+    cat << END
+test version.
+END
+}
+
+print_short_help()
+{
+    cat << END
+test version.
+END
+}
+
 #check command SSERAFIM
 if type "sserafim" > /dev/null 2>&1; then
     echo "Confirmed SSERAFIM..." 
@@ -26,11 +51,73 @@ fi
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 OUTPUT_DIR="./AESPA"
+SET_SRR_TABLE_PATH=false
+BUILD_MODE=run
 
-if [[ "$1" == "build" ]] ; then
+while getopts :o:c:t:BhV option
+do
+    case "$option" in
+        o)
+            OUTPUT_DIR=$OPTARG
+            ;;
+        t)
+            SRR_TABLE_PATH=$OPTARG
+            SET_SRR_TABLE_PATH=true
+            ;;
+        B)
+            BUILD_MODE=build
+            ;;
+        c)
+            CONDA_INIT_PATH=$OPTARG
+            ;;
+        h)
+            print_help
+            exit 0
+            ;;
+        V)
+            print_version
+            exit 0
+            ;;
+        :)
+            print_error "option requires an argument -- '$OPTARG'"
+            exit 1
+            ;;
+        \?)
+            print_error "unrecognized option -- '$OPTARG'"
+            exit 1
+            ;;
+    esac
+done
 
-elif [[ "$1" == "run" ]] ; then
+if [[ "$BUILD_MODE" == "build" ]] ; then
 
-else
-    printf '%s\n\n' "${SCRIPT_NAME}: please select \"run\" or \"build\"" 1>&2
+    if [[ "$SET_SRR_TABLE_PATH" != "true" ]] ; then
+    printf '%s\n\n' "${SCRIPT_NAME}: need more option" 1>&2
+    print_short_help
+    exit 1
+    fi
+
+    #make parent directory
+    if [[ -d "$OUTPUT_DIR" ]] ; then
+    printf '%s\n' "${SCRIPT_NAME}: the same directory is already exist." 1>&2
+    exit 1
+    fi
+
+    echo "..build mode.."
+
+    mkdir -p "$OUTPUT_DIR"
+    touch $OUTPUT_DIR/.aespa
+    chmod 755 $OUTPUT_DIR/.aespa
+
+    bash $SCRIPT_DIR/script/build.sh $CONDA_INIT_PATH $OUTPUT_DIR $SCRIPT_DIR $SRR_TABLE_PATH
+
+elif [[ "$BUILD_MODE" == "run" ]] ; then
+
+    CONFIRM_PATH=`realpath ${OUTPUT_DIR#*/}`
+    if [[ ! -e "$CONFIRM_PATH/.aespa" ]] ; then
+    printf '%s\n' "${SCRIPT_NAME}: Did you run \"build mode\" ?" 1>&2
+    exit 1
+    fi
+
+    echo "run mode"
 fi
