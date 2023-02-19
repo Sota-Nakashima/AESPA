@@ -1,9 +1,15 @@
+import sys
 import pandas as pd
 import os
 
+OUTPUT_DIR = sys.argv[1]
+SRR_TABLE_PATH = sys.argv[2]
+
+
 #############################
-#library
+#function
 #############################
+#sort organism by alphabet → extract each dataframe by organism
 def make_SRR_list(df,DIR_PATH):
     organism_list = sorted(df["Organism"].unique())
     for i in organism_list:
@@ -12,8 +18,12 @@ def make_SRR_list(df,DIR_PATH):
         df_organism["Run"].to_csv(f"{DIR_PATH}/{ORGANISM_NAME}_SRR_list.txt",index=False,header=False)
 #############################
 
-df_origin = pd.read_csv("/home/nakashima/Lab/2023_2_16/SraRunTable.txt")
+#import dataframe
+df_origin = pd.read_csv(SRR_TABLE_PATH)
 
+#check nesessary columns
+
+#extract columns from dataframe
 column_origin = ["Run","LibraryLayout","Organism","source_name","sex","TISSUE"]
 column_cut = []
 
@@ -23,26 +33,39 @@ for i in column_origin:
 
 df_cut = df_origin[column_cut]
 
+#devide dataframe into single and pair
 df_cut_single = df_cut[df_cut["LibraryLayout"] == "SINGLE"]
 df_cut_pair = df_cut[df_cut["LibraryLayout"] == "PAIRED"]
 
+#single
 if not df_cut_single.empty:
-    DIR_PATH = "./single"
+    #make directory
+    DIR_PATH = f"{OUTPUT_DIR}/single"
+    DIR_PATH_SRR = f"{DIR_PATH}/single_SRR_list"
     os.makedirs(DIR_PATH,exist_ok=True)
+    os.makedirs(DIR_PATH_SRR,exist_ok=True)
+
+    #output whole dataframe
     df_cut_single.to_csv(f"{DIR_PATH}/dataframe.csv",index=False)
-    
+
+    #output organism list
     organism_list = sorted(df_cut_single["Organism"].unique())
-    make_SRR_list(df_cut_single,DIR_PATH)
+    organism_series = pd.Series(organism_list)
+    organism_series.to_csv(f"{DIR_PATH}/organism.txt",index=False,header=False)
+
+    #output SRR list
+    make_SRR_list(df_cut_single,DIR_PATH_SRR)
 
 if not df_cut_pair.empty:
-    DIR_PATH = "./pair"
+    #output whole dataframe
+    DIR_PATH = f"{OUTPUT_DIR}/pair"
+    DIR_PATH_SRR = f"{DIR_PATH}/pair_SRR_list"
     os.makedirs(DIR_PATH,exist_ok=True)
+    os.makedirs(DIR_PATH_SRR,exist_ok=True)
+
+    #output organism list
     df_cut_pair.to_csv(f"{DIR_PATH}/dataframe.csv",index=False)
-    
     organism_list = sorted(df_cut_pair["Organism"].unique())
-    make_SRR_list(df_cut_pair,DIR_PATH)
 
-
-
-
-
+    #output SRR list
+    make_SRR_list(df_cut_pair,DIR_PATH_SRR)

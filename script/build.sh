@@ -1,6 +1,6 @@
 #!/bin/bash
 
-readonly SCRIPT_NAME=${0##*/}
+readonly SCRIPT_NAME="AESPA build"
 readonly VERSION=0.1.0
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
@@ -16,13 +16,14 @@ for S in $(seq 0 $list_number); do
 done
 
 CONDA_INIT_PATH+="/etc/profile.d/conda.sh"
+conda activate bio
 
 ###################################
 
 print_version()
 {
     cat << END
-AESPA build version $VERSION
+${SCRIPT_NAME} version $VERSION
 END
 }
 
@@ -72,6 +73,8 @@ do
     esac
 done
 
+#confirm path, directory exist
+####################################
 if [[ "${SET_SRR_TABLE_PATH}" != "true" ]] ; then
     printf '%s\n\n' "${SCRIPT_NAME}: need more option" 1>&2
     print_short_help
@@ -90,4 +93,19 @@ if [[ ! -e $CONDA_INIT_PATH ]] ; then
     exit 1
 fi
 
+if [[ -d "$OUTPUT_DIR" ]] ; then
+printf '%s\n' "${SCRIPT_NAME}: the same directory is already exist." 1>&2
+exit 1
+fi
+####################################
 echo "..build mode.."
+
+#make parent directory
+mkdir -p "$OUTPUT_DIR"
+
+#make tag file
+touch $OUTPUT_DIR/.aespa
+chmod 755 $OUTPUT_DIR/.aespa
+
+#core program
+python -B $SCRIPT_DIR/build.py $OUTPUT_DIR $SRR_TABLE_PATH 
