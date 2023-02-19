@@ -1,36 +1,26 @@
 #!/bin/bash
 
-# get conda init path
-###################################
-conda_path=`which conda`
-conda_path_array=(${conda_path//\// })
-list_number=$((${#conda_path_array[*]}-3))
-for S in $(seq 0 $list_number); do
-    CONDA_INIT_PATH+="/${conda_path_array[$S]}"
-done
-
-CONDA_INIT_PATH+="/etc/profile.d/conda.sh"
-echo $conda_init_path
-
-###################################
 readonly SCRIPT_NAME=${0##*/}
 readonly VERSION=0.1.0
-
-#check command SSERAFIM
-if type "sserafim" > /dev/null 2>&1; then
-    echo "Confirmed SSERAFIM..." 
-else
-    echo "Not exist SSERAFIM. Please install and add path." 1>&2
-    exit 1
-fi
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 OUTPUT_DIR="./AESPA"
 
 if [[ "$1" == "build" ]] ; then
 
-elif [[ "$1" == "run" ]] ; then
+    echo "..build mode.."
+    arg=${@:2}
+    bash $SCRIPT_DIR/script/build.sh $arg
 
+elif [[ "$1" == "run" ]] ; then
+    #check command SSERAFIM
+    if type "sserafim" > /dev/null 2>&1; then
+        echo "Confirmed SSERAFIM..." 
+    else
+        echo "Not exist SSERAFIM. Please install and add path." 1>&2
+        exit 1
+    fi
+    echo "run mode"
 else
-    printf '%s\n\n' "${SCRIPT_NAME}: please select \"run\" or \"build\"" 1>&2
+    printf '%s\n\n' "${SCRIPT_NAME}: please select \"build\" or \"run\"" 1>&2
 fi
