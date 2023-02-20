@@ -6,7 +6,7 @@ readonly VERSION=0.1.0
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 OUTPUT_DIR="./AESPA"
 
-# get conda init path
+# get conda init path and activate env
 ###################################
 conda_path=`which conda`
 conda_path_array=(${conda_path//\// })
@@ -16,6 +16,9 @@ for S in $(seq 0 $list_number); do
 done
 
 CONDA_INIT_PATH+="/etc/profile.d/conda.sh"
+
+source $CONDA_INIT_PATH
+
 conda activate bio
 
 ###################################
@@ -108,4 +111,25 @@ touch $OUTPUT_DIR/.aespa
 chmod 755 $OUTPUT_DIR/.aespa
 
 #core program
-python -B $SCRIPT_DIR/build.py $OUTPUT_DIR $SRR_TABLE_PATH 
+python -B $SCRIPT_DIR/build.py $OUTPUT_DIR $SRR_TABLE_PATH
+
+if [ $? -ne 0 ]; then
+exit 1
+fi
+
+if [[ -d $OUTPUT_DIR/pair ]] ; then
+    printf '\n\033[31m%s\033[m\n' 'PAIR-END'
+    printf '\n%s\n' "*organism*"
+    cat $OUTPUT_DIR/pair/organism.txt
+    printf '\n%s\033[33m%s\033[m%s\n%s\n' \
+    "Please prepare" " each absolute path list" " (.txt) of these reference genomes (.fasta) and anotations (.gtf)." \
+    "Use -g and -a option."
+fi
+if [[ -d $OUTPUT_DIR/single ]] ; then
+    printf '\n\033[31m%s\033[m\n' 'SINGLE-END'
+    printf '\n%s\n' "*organism*"
+    cat $OUTPUT_DIR/single/organism.txt
+    printf '\n%s\033[33m%s\033[m%s\n%s\n' \
+    "Please prepare" " each absolute path list " "(.txt) of these reference genomes (.fasta) and anotations (.gtf)." \
+    "Use -G and -A option."
+fi

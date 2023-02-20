@@ -3,6 +3,27 @@
 readonly SCRIPT_NAME=${0##*/}
 readonly VERSION=0.1.0
 
+print_help()
+{
+    cat << END
+test version.
+END
+}
+
+print_version()
+{
+    cat << END
+${SCRIPT_NAME} version $VERSION
+END
+}
+
+print_short_help()
+{
+    cat << END
+test version.
+END
+}
+
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 if [[ "$1" == "build" ]] ; then
@@ -26,6 +47,17 @@ elif [[ "$1" == "run" ]] ; then
         exit 1
     fi
     echo "run mode"
-else
-    printf '%s\n' "${SCRIPT_NAME}: please select \"build\" or \"run\"" 1>&2
+
+elif [[ "$1" == "-h" ]] ; then
+    print_help
+    exit 0
+
+elif [[ "$1" == "-V" ]] ; then
+    print_version
+    exit 0
+
+else 
+    printf '%s\n%s\n' "${SCRIPT_NAME}: please select \"build\" or \"run\"" "or input -h, -V option." 1>&2
+    print_short_help
+    exit 1
 fi
