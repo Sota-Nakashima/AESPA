@@ -1,10 +1,15 @@
 #!/bin/bash
 
-readonly SCRIPT_NAME="AESPA build"
+readonly SCRIPT_NAME="AESPA run"
 readonly VERSION=0.1.0
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 OUTPUT_DIR="./AESPA"
+SSERAFIM_PATH="sserafim"
+SET_ANNOTATION_PATH_FILE_SINGLE=false
+SET_ANNOTATION_PATH_FILE_PAIR=false
+SET_GENNOME_PATH_FILE_SINGLE=false
+SET_GENNOME_PATH_FILE_PAIR=false
 
 # get conda init path and activate env
 ###################################
@@ -51,26 +56,6 @@ CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
                     "~/{YOUR CONDA PACKAGE}/etc/profile.d/conda.sh"
 -h HELP             show help                 
 -V VERSION          show version
-
-##################
-RESULT_DIRECTORY
-##################
-OUTPUT_DIR
-│
-├─── dataframe.csv
-├─── pair
-│       ├─── organism.txt
-│       └─── single_SRR_List
-│               ├─── organism1
-│               ├─── organism2
-│               │       :
-│       
-└─── single
-        ├─── organism.txt
-        └─── single_SRR_List
-                ├─── organism1
-                ├─── organism2
-                │       :
 END
 }
 
@@ -98,18 +83,33 @@ CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
 END
 }
 
-while getopts :o:c:t:hV option
+while getopts :o:c:a:A:g:G:S:hV option
 do
     case "$option" in
         o)
             OUTPUT_DIR=$OPTARG
             ;;
-        t)
-            SRR_TABLE_PATH=$OPTARG
-            SET_SRR_TABLE_PATH=true
-            ;;
         c)
             CONDA_INIT_PATH=$OPTARG
+            ;;
+        a)
+            ANNOTATION_PATH_FILE_SINGLE=$OPTARG
+            SET_ANNOTATION_PATH_FILE_SINGLE=true
+            ;;
+        A)
+            ANNOTATION_PATH_FILE_PAIR=$OPTARG
+            SET_ANNOTATION_PATH_FILE_PAIR=true
+            ;;
+        g)
+            GENNOME_PATH_FILE_SINGLE=$OPTARG
+            SET_GENNOME_PATH_FILE_SINGLE=true
+            ;;
+        G)
+            GENNOME_PATH_FILE_PAIR=$OPTARG
+            SET_GENNOME_PATH_FILE_PAIR=true
+            ;;
+        S)
+            SSERAFIM_PATH=$OPTARG
             ;;
         h)
             print_help
@@ -130,61 +130,58 @@ do
     esac
 done
 
-#confirm path, directory exist
-####################################
-if [[ "${SET_SRR_TABLE_PATH}" != "true" ]] ; then
-    printf '%s\n\n' "${SCRIPT_NAME}: need more option" 1>&2
-    print_short_help
-    exit 1
-fi
-
-if [[ ! -e $SRR_TABLE_PATH ]] ; then
-    printf '%s\n\n' "${SCRIPT_NAME}: options path is not exist." 1>&2
-    print_short_help
-    exit 1
-fi
-
+#check conda path
 if [[ ! -e $CONDA_INIT_PATH ]] ; then
     printf '%s\n\n' "${SCRIPT_NAME}: you have to check CONDA_INIT_PATH. please use -c option." 1>&2
     print_short_help
     exit 1
 fi
 
-if [[ -d "$OUTPUT_DIR" ]] ; then
-printf '%s\n' "${SCRIPT_NAME}: the same directory is already exist." 1>&2
-exit 1
+#check command SSERAFIM
+if type "$SSERAFIM_PATH" > /dev/null 2>&1; then
+    echo "Confirmed SSERAFIM..." 
+else
+    echo "Not exist SSERAFIM. Please install and add path or use -S option." 1>&2
+    exit 1
 fi
-####################################
-echo "..build mode.."
 
-#make parent directory
-mkdir -p "$OUTPUT_DIR"
-
-#make tag file
-touch $OUTPUT_DIR/.aespa
-chmod 755 $OUTPUT_DIR/.aespa
-
-#core program
-
-bash $SCRIPT_DIR/create_df.sh $CONDA_INIT_PATH $SCRIPT_DIR $OUTPUT_DIR $SRR_TABLE_PATH
-
-if [ $? -ne 0 ]; then
-exit 1
+#check "aespa build" command
+if [[ ! -f $OUTPUT_DIR/.aespa ]] ; then
+    echo "Did you do \"aespa build\"?" 1>&2
+    exit 1    
 fi
 
 if [[ -d $OUTPUT_DIR/pair ]] ; then
-    printf '\n\033[31m%s\033[m\n' 'PAIR-END'
-    printf '\n%s\n' "*organism*"
-    cat $OUTPUT_DIR/pair/organism.txt
-    printf '\n%s\033[33m%s\033[m%s\n%s\n' \
-    "Please prepare" " each absolute path list" " (.txt) of these reference genomes (.fasta) and anotations (.gtf)." \
-    "Use -g and -a option."
+
+    #check option
+    if [[ "${SET_ANNOTATION_PATH_FILE_PAIR}" != "true" || "${SET_GENNOME_PATH_FILE_PAIR}" != "true" ]] ; then
+        printf '%s\n\n' "${SCRIPT_NAME}: need more option" 1>&2
+        print_short_help
+        exit 1
+    fi
+    #check path exist
+    if [[ ! -e $ANNOTATION_PATH_FILE_PAIR || ! -e $GENNOME_PATH_FILE_PAIR ]] ; then
+        printf '%s\n\n' "${SCRIPT_NAME}: options path is not exist." 1>&2
+        print_short_help
+        exit 1
+    fi
+
 fi
+
 if [[ -d $OUTPUT_DIR/single ]] ; then
-    printf '\n\033[31m%s\033[m\n' 'SINGLE-END'
-    printf '\n%s\n' "*organism*"
-    cat $OUTPUT_DIR/single/organism.txt
-    printf '\n%s\033[33m%s\033[m%s\n%s\n' \
-    "Please prepare" " each absolute path list " "(.txt) of these reference genomes (.fasta) and anotations (.gtf)." \
-    "Use -G and -A option."
+
+    #check option
+    if [[ "${SET_ANNOTATION_PATH_FILE_SINGLE}" != "true" || "${SET_GENNOME_PATH_FILE_SINGLE}" != "true" ]] ; then
+        printf '%s\n\n' "${SCRIPT_NAME}: need more option" 1>&2
+        print_short_help
+        exit 1
+    fi
+    #check path exist
+    if [[ ! -e $ANNOTATION_PATH_FILE_SINGLE || ! -e $GENNOME_PATH_FILE_SINGLE ]] ; then
+        printf '%s\n\n' "${SCRIPT_NAME}: options path is not exist." 1>&2
+        print_short_help
+        exit 1
+    fi
+
 fi
+

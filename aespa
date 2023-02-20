@@ -6,7 +6,17 @@ readonly VERSION=0.1.0
 print_help()
 {
     cat << END
-test version.
+   ■■    ■■■■■   ■■■  ■■■■■    ■■    
+   ■■    ■      ■     ■   ■■   ■■    
+  ■■ ■   ■      ■     ■    ■  ■■ ■   
+  ■  ■   ■■■■■  ■■■   ■   ■■  ■  ■   
+ ■■  ■■  ■        ■■■ ■■■■■  ■■  ■■  
+ ■■■■■■  ■          ■ ■      ■■■■■■  
+ ■    ■■ ■         ■■ ■      ■    ■■ 
+■■     ■ ■■■■■  ■■■■  ■     ■■     ■
+This program is lapper program of SSERAFIM. This makes SSERAFIM analyze multi spicies.
+This program depends on SSERAFIM. Please install SSERAFIM and pass through.
+If you want to choose another parameters in each process, please rewrite programs by yourself.
 END
 }
 
@@ -39,14 +49,14 @@ if [[ "$1" == "build" ]] ; then
 
 elif [[ "$1" == "run" ]] ; then
 
-    #check command SSERAFIM
-    if type "sserafim" > /dev/null 2>&1; then
-        echo "Confirmed SSERAFIM..." 
-    else
-        echo "Not exist SSERAFIM. Please install and add path." 1>&2
-        exit 1
+    #acquire arguments
+    args=${@:2}
+    #build
+    bash $SCRIPT_DIR/script/run.sh $args
+    #deal with error 
+    if [ $? -ne 0 ]; then
+    exit 1
     fi
-    echo "run mode"
 
 elif [[ "$1" == "-h" ]] ; then
     print_help

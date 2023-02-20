@@ -20,7 +20,7 @@ def make_SRR_list(df,DIR_PATH):
 def make_organism_list(df,DIR_PATH):
     #output organism list
     organism_list = sorted(df["Organism"].unique())
-    #change blannk into underbar
+    #change blank into underbar
     organism_series = pd.Series(organism_list)
     organism_series = organism_series.str.replace(" ","_")
     organism_series.to_csv(f"{DIR_PATH}/organism.txt",index=False,header=False)
