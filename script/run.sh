@@ -35,26 +35,41 @@ END
 print_help()
 {
     cat << END
-This command build parent directory from file.
-File can be install from SRA Run Selector. 
-https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/Traces/study/
+This command execute sserafim based on directory made by "aespa build" command.
+Because you must execute "aespa build" command before "aespa build".
 
 Example
-    aespa build [OPTION] [-t SRR_TABLE_PATH] [-o OUTPUT_DIR]
+    <Both pair-end and single-end>
+    aespa run [OPTION] [-o OUTPUT_DIR] [-@ PALARREL]
+    [-g SINGLE-END_REFERENCE_GENNOME_PATH_FILE] [-G PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR] 
+    [-a SINGLE-END_ANNOTATION_PATH_FILE] [-A PAIR-END_ANNOTATION_PATH_FILE]
+
+    <Only pair-end>
+    aespa run [OPTION] [-o OUTPUT_DIR] [-@ PALARREL]
+    [-G PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR] [-A PAIR-END_ANNOTATION_PATH_FILE]
+
+    <Only single-end>
+    aespa run [OPTION] [-o OUTPUT_DIR] [-@ PALARREL]
+    [-g SINGLE-END_REFERENCE_GENNOME_PATH_FILE] [-a SINGLE-END_ANNOTATION_PATH_FILE]
 
 OPTION
 -o OUTPUT_DIR       set output directory(default: ./AESPA)
+* Please set same directory you set when you executed "aespa build" command.
 
 #########################################################
-CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
+CAUTION : YOU HAVE TO SET THESE PARAMETERS DEPENDING ON YOUR SITUATION!!
 >>better absolute path than relative path<<
 #########################################################
--t SRR_TABLE_PATH (.txt)
+SINGLE-END_REFERENCE_GENNOME_PATH_FILE (.txt)
+SINGLE-END_ANNOTATION_PATH_FILE (.txt)
+PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR (.txt)
+PAIR-END_ANNOTATION_PATH_FILE (.txt)
 #########################################################
 
-
+-S SSERAFIM_PATH    sserafim path
 -c CONDA_INIT_PATH  if printed error "you have to check ...",please reset path.
                     "~/{YOUR CONDA PACKAGE}/etc/profile.d/conda.sh"
+-@ PARALLEL (int)   set using CPU core(default: 1)
 -h HELP             show help                 
 -V VERSION          show version
 END
@@ -64,21 +79,37 @@ print_short_help()
 {
     cat << END
 Example
-    aespa build [OPTION] [-t SRR_TABLE_PATH] [-o OUTPUT_DIR]
+    <Both pair-end and single-end>
+    aespa run [OPTION] [-o OUTPUT_DIR] [-@ PALARREL]
+    [-g SINGLE-END_REFERENCE_GENNOME_PATH_FILE] [-G PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR] 
+    [-a SINGLE-END_ANNOTATION_PATH_FILE] [-A PAIR-END_ANNOTATION_PATH_FILE]
+
+    <Only pair-end>
+    aespa run [OPTION] [-o OUTPUT_DIR] [-@ PALARREL]
+    [-G PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR] [-A PAIR-END_ANNOTATION_PATH_FILE]
+
+    <Only single-end>
+    aespa run [OPTION] [-o OUTPUT_DIR] [-@ PALARREL]
+    [-g SINGLE-END_REFERENCE_GENNOME_PATH_FILE] [-a SINGLE-END_ANNOTATION_PATH_FILE]
 
 OPTION
 -o OUTPUT_DIR       set output directory(default: ./AESPA)
+* Please set same directory you set when you executed "aespa build" command.
 
 #########################################################
-CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
+CAUTION : YOU HAVE TO SET THESE PARAMETERS DEPENDING ON YOUR SITUATION!!
 >>better absolute path than relative path<<
 #########################################################
--t SRR_TABLE_PATH (.txt)
+SINGLE-END_REFERENCE_GENNOME_PATH_FILE (.txt)
+SINGLE-END_ANNOTATION_PATH_FILE (.txt)
+PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR (.txt)
+PAIR-END_ANNOTATION_PATH_FILE (.txt)
 #########################################################
 
-
+-S SSERAFIM_PATH    sserafim path
 -c CONDA_INIT_PATH  if printed error "you have to check ...",please reset path.
                     "~/{YOUR CONDA PACKAGE}/etc/profile.d/conda.sh"
+-@ PARALLEL (int)   set using CPU core(default: 1)
 -h HELP             show help                 
 -V VERSION          show version
 END
