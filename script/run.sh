@@ -240,7 +240,7 @@ if [[ -d $OUTPUT_DIR/single ]] ; then
     if [[ $organism_number -ne `count_number_of_lines $GENNOME_PATH_FILE_SINGLE` || \
         $organism_number -ne `count_number_of_lines $ANNOTATION_PATH_FILE_SINGLE` ]] ; then
         echo "(single-end) Don't match the number of lines between organism and input file." 1>&2
-        echo "(single-end) Please check forgetting inserting LF in a last line."
+        echo "(single-end) Please check forgetting inserting LF in a last line." 1>&2
         exit 1
     fi
 
@@ -265,7 +265,7 @@ if [[ -d $OUTPUT_DIR/pair ]] ; then
         "$SSERAFIM_PATH" -o "$OUTPUT_DIR/pair/${args[0]}" -a "${args[2]}" -g "${args[1]}" \
         -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH -P  
         if [ $? -ne 0 ]; then
-            echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"."
+            echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"." 1>&2
             exit 1
         fi
     done
@@ -293,7 +293,7 @@ if [[ -d $OUTPUT_DIR/single ]] ; then
         "$SSERAFIM_PATH" -o "$OUTPUT_DIR/single/${args[0]}" -a "${args[2]}" -g "${args[1]}" \
         -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH
         if [ $? -ne 0 ]; then
-            echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"."
+            echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"." 1>&2
             exit 1
         fi
     done
