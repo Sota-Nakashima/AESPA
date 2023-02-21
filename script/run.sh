@@ -259,7 +259,7 @@ if [[ -d $OUTPUT_DIR/single ]] ; then
 
     for line in "${file[@]}"; do
         args=($line)
-        "$SSERAFIM_PATH" -o "$OUTPUT_DIR/single/${args[0]}" -a "${args[1]}" -g "${args[2]}" \
+        "$SSERAFIM_PATH" -o "$OUTPUT_DIR/single/${args[0]}" -a "${args[2]}" -g "${args[1]}" \
         -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH
         if [ $? -ne 0 ]; then
             echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"."
