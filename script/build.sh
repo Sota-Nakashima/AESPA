@@ -160,17 +160,19 @@ echo "..build mode.."
 #make parent directory
 mkdir -p "$OUTPUT_DIR"
 
-#make tag file
-touch $OUTPUT_DIR/.aespa
-chmod 755 $OUTPUT_DIR/.aespa
 
 #core program
 
 bash $SCRIPT_DIR/create_df.sh $CONDA_INIT_PATH $SCRIPT_DIR $OUTPUT_DIR $SRR_TABLE_PATH
 
 if [ $? -ne 0 ]; then
+rm -rf $OUTPUT_DIR
 exit 1
 fi
+
+#make tag file
+touch $OUTPUT_DIR/.aespa
+chmod 755 $OUTPUT_DIR/.aespa
 
 if [[ -d $OUTPUT_DIR/pair ]] ; then
     printf '\n\033[31m%s\033[m\n' 'PAIR-END'

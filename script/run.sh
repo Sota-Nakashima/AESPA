@@ -6,6 +6,7 @@ readonly VERSION=0.1.0
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 OUTPUT_DIR="./AESPA"
 SSERAFIM_PATH="sserafim"
+PALARREL=1
 SET_ANNOTATION_PATH_FILE_SINGLE=false
 SET_ANNOTATION_PATH_FILE_PAIR=false
 SET_GENNOME_PATH_FILE_SINGLE=false
@@ -83,7 +84,13 @@ CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
 END
 }
 
-while getopts :o:c:a:A:g:G:S:hV option
+count_number_of_lines()
+{
+    local lines=`cat $1 | wc -l`
+    echo $lines
+}
+
+while getopts :o:c:a:A:g:G:S:@:hV option
 do
     case "$option" in
         o)
@@ -91,6 +98,9 @@ do
             ;;
         c)
             CONDA_INIT_PATH=$OPTARG
+            ;;
+        @)
+            PALARREL=$OPTARG
             ;;
         a)
             ANNOTATION_PATH_FILE_SINGLE=$OPTARG
@@ -166,6 +176,16 @@ if [[ -d $OUTPUT_DIR/pair ]] ; then
         exit 1
     fi
 
+    #check matching organism number and input file lines
+    organism_number=`count_number_of_lines $OUTPUT_DIR/pair/organism.txt`
+
+    if [[ $organism_number -ne `count_number_of_lines $GENNOME_PATH_FILE_PAIR` || \
+        $organism_number -ne `count_number_of_lines $ANNOTATION_PATH_FILE_PAIR` ]] ; then
+        echo "(pair-end) Don't match the number of lines between organism and input file." 1>&2
+        echo "(pair-end) Please check forgetting inserting LF in a last line."
+        exit 1
+    fi
+
 fi
 
 if [[ -d $OUTPUT_DIR/single ]] ; then
@@ -183,5 +203,73 @@ if [[ -d $OUTPUT_DIR/single ]] ; then
         exit 1
     fi
 
+    #check matching organism number and input file lines
+    organism_number=`count_number_of_lines $OUTPUT_DIR/single/organism.txt`
+
+    if [[ $organism_number -ne `count_number_of_lines $GENNOME_PATH_FILE_SINGLE` || \
+        $organism_number -ne `count_number_of_lines $ANNOTATION_PATH_FILE_SINGLE` ]] ; then
+        echo "(single-end) Don't match the number of lines between organism and input file." 1>&2
+        echo "(single-end) Please check forgetting inserting LF in a last line."
+        exit 1
+    fi
+
 fi
 
+#create path set and core program
+
+if [[ -d $OUTPUT_DIR/pair ]] ; then
+
+    bash $SCRIPT_DIR/create_path_df.sh $CONDA_INIT_PATH $OUTPUT_DIR/pair $SCRIPT_DIR $GENNOME_PATH_FILE_PAIR $ANNOTATION_PATH_FILE_PAIR
+    
+    #change IFS and input sra quary
+    IFS=$'\n'
+    file=(`cat "$OUTPUT_DIR/.aespa"`)
+    #return IFS default
+    IFS=$' \t\n'
+
+    #sserafim
+    echo "running sserafim..."
+    for line in "${file[@]}"; do
+        args=($line) 
+        "$SSERAFIM_PATH" -o "$OUTPUT_DIR/pair/${args[0]}" -a "${args[1]}" -g "${args[2]}" \
+        -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH -P  
+        if [ $? -ne 0 ]; then
+            echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"."
+            exit 1
+        fi
+    done
+
+    #remove unessesary file
+    if [ $? -eq 0 ]; then
+        rm -rf $OUTPUT_DIR/pair/SRR_list $OUTPUT_DIR/pair/organism.txt
+        echo "pair-end was successful."
+    fi
+fi
+
+
+if [[ -d $OUTPUT_DIR/single ]] ; then
+
+    bash $SCRIPT_DIR/create_path_df.sh $CONDA_INIT_PATH $OUTPUT_DIR/single $SCRIPT_DIR $GENNOME_PATH_FILE_SINGLE $ANNOTATION_PATH_FILE_SINGLE
+
+    #change IFS and input sra quary
+    IFS=$'\n'
+    file=(`cat "$OUTPUT_DIR/.aespa"`)
+    #return IFS default
+    IFS=$' \t\n'
+
+    for line in "${file[@]}"; do
+        args=($line)
+        "$SSERAFIM_PATH" -o "$OUTPUT_DIR/single/${args[0]}" -a "${args[1]}" -g "${args[2]}" \
+        -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH
+        if [ $? -ne 0 ]; then
+            echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"."
+            exit 1
+        fi
+    done
+
+    #remove unessesary file
+    if [ $? -eq 0 ]; then
+        rm -rf $OUTPUT_DIR/single/SRR_list $OUTPUT_DIR/single/organism.txt
+        echo "single-end was successful."
+    fi
+fi
