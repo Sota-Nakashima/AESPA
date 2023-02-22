@@ -7,6 +7,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 OUTPUT_DIR="./AESPA"
 SSERAFIM_PATH="sserafim"
 PALARREL=1
+LIGHT_MODE=
 SET_ANNOTATION_PATH_FILE_SINGLE=false
 SET_ANNOTATION_PATH_FILE_PAIR=false
 SET_GENNOME_PATH_FILE_SINGLE=false
@@ -53,7 +54,7 @@ Example
     [-g SINGLE-END_REFERENCE_GENNOME_PATH_FILE] [-a SINGLE-END_ANNOTATION_PATH_FILE]
 
 OPTION
--o OUTPUT_DIR       set output directory(default: ./AESPA)
+-o OUTPUT_DIR       Set output directory(default: ./AESPA)
 * Please set same directory you set when you executed "aespa build" command.
 
 #########################################################
@@ -67,11 +68,12 @@ PAIR-END_ANNOTATION_PATH_FILE (.txt)
 #########################################################
 
 -S SSERAFIM_PATH    sserafim path
--c CONDA_INIT_PATH  if printed error "you have to check ...",please reset path.
+-c CONDA_INIT_PATH  If printed error "you have to check ...", please reset path.
                     "~/{YOUR CONDA PACKAGE}/etc/profile.d/conda.sh"
--@ PARALLEL (int)   set using CPU core(default: 1)
--h HELP             show help                 
--V VERSION          show version
+-@ PARALLEL (int)   Set using CPU core(default: 1)
+-L LIGHT_MODE       Don't make law_data.tar.gz (This option work on SSERAFIM)
+-h HELP             Show help                 
+-V VERSION          Show version
 END
 }
 
@@ -107,11 +109,11 @@ PAIR-END_ANNOTATION_PATH_FILE (.txt)
 #########################################################
 
 -S SSERAFIM_PATH    sserafim path
--c CONDA_INIT_PATH  if printed error "you have to check ...",please reset path.
+-c CONDA_INIT_PATH  If printed error "you have to check ...",please reset path.
                     "~/{YOUR CONDA PACKAGE}/etc/profile.d/conda.sh"
--@ PARALLEL (int)   set using CPU core(default: 1)
--h HELP             show help                 
--V VERSION          show version
+-@ PARALLEL (int)   Set using CPU core(default: 1)
+-h HELP             Show help                 
+-V VERSION          Show version
 END
 }
 
@@ -121,7 +123,7 @@ count_number_of_lines()
     echo $lines
 }
 
-while getopts :o:c:a:A:g:G:S:@:hV option
+while getopts :o:c:a:A:g:G:S:@:LhV option
 do
     case "$option" in
         o)
@@ -151,6 +153,9 @@ do
             ;;
         S)
             SSERAFIM_PATH=$OPTARG
+            ;;
+        L)
+            LIGHT_MODE=-L
             ;;
         h)
             print_help
@@ -263,7 +268,7 @@ if [[ -d $OUTPUT_DIR/pair ]] ; then
     for line in "${file[@]}"; do
         args=($line) 
         "$SSERAFIM_PATH" -o "$OUTPUT_DIR/pair/${args[0]}" -a "${args[2]}" -g "${args[1]}" \
-        -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH -P  
+        -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH -P "$LIGHT_MODE"
         if [ $? -ne 0 ]; then
             echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"." 1>&2
             exit 1
@@ -291,7 +296,7 @@ if [[ -d $OUTPUT_DIR/single ]] ; then
     for line in "${file[@]}"; do
         args=($line)
         "$SSERAFIM_PATH" -o "$OUTPUT_DIR/single/${args[0]}" -a "${args[2]}" -g "${args[1]}" \
-        -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH
+        -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH "$LIGHT_MODE"
         if [ $? -ne 0 ]; then
             echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"." 1>&2
             exit 1

@@ -37,7 +37,7 @@ Example
     aespa build [OPTION] [-t SRR_TABLE_PATH] [-o OUTPUT_DIR]
 
 OPTION
--o OUTPUT_DIR       set output directory(default: ./AESPA)
+-o OUTPUT_DIR       Set output directory(default: ./AESPA)
 
 #########################################################
 CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
@@ -47,10 +47,10 @@ CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
 #########################################################
 
 
--c CONDA_INIT_PATH  if printed error "you have to check ...",please reset path.
+-c CONDA_INIT_PATH  If printed error "you have to check ...", please reset path.
                     "~/{YOUR CONDA PACKAGE}/etc/profile.d/conda.sh"
--h HELP             show help                 
--V VERSION          show version
+-h HELP             Show help                 
+-V VERSION          Show version
 
 ##################
 RESULT_DIRECTORY
@@ -81,7 +81,7 @@ Example
     aespa build [OPTION] [-t SRR_TABLE_PATH] [-o OUTPUT_DIR]
 
 OPTION
--o OUTPUT_DIR       set output directory(default: ./AESPA)
+-o OUTPUT_DIR       Set output directory(default: ./AESPA)
 
 #########################################################
 CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
@@ -91,10 +91,10 @@ CAUTION : YOU HAVE TO SET THESE PARAMETERS ABSOLUTELY!!
 #########################################################
 
 
--c CONDA_INIT_PATH  if printed error "you have to check ...",please reset path.
+-c CONDA_INIT_PATH  If printed error "you have to check ...", please reset path.
                     "~/{YOUR CONDA PACKAGE}/etc/profile.d/conda.sh"
--h HELP             show help                 
--V VERSION          show version
+-h HELP             Show help                 
+-V VERSION          Show version
 END
 }
 
