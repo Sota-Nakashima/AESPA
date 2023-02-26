@@ -61,10 +61,10 @@ OPTION
 CAUTION : YOU HAVE TO SET THESE PARAMETERS DEPENDING ON YOUR SITUATION!!
 >>better absolute path than relative path<<
 #########################################################
-SINGLE-END_REFERENCE_GENNOME_PATH_FILE (.txt)
-SINGLE-END_ANNOTATION_PATH_FILE (.txt)
-PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR (.txt)
-PAIR-END_ANNOTATION_PATH_FILE (.txt)
+-g SINGLE-END_REFERENCE_GENNOME_PATH_FILE (.txt)
+-a SINGLE-END_ANNOTATION_PATH_FILE (.txt)
+-G PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR (.txt)
+-A PAIR-END_ANNOTATION_PATH_FILE (.txt)
 #########################################################
 
 -S SSERAFIM_PATH    Sserafim path
@@ -130,10 +130,10 @@ OPTION
 CAUTION : YOU HAVE TO SET THESE PARAMETERS DEPENDING ON YOUR SITUATION!!
 >>better absolute path than relative path<<
 #########################################################
-SINGLE-END_REFERENCE_GENNOME_PATH_FILE (.txt)
-SINGLE-END_ANNOTATION_PATH_FILE (.txt)
-PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR (.txt)
-PAIR-END_ANNOTATION_PATH_FILE (.txt)
+-g SINGLE-END_REFERENCE_GENNOME_PATH_FILE (.txt)
+-a SINGLE-END_ANNOTATION_PATH_FILE (.txt)
+-G PAIR_END_REFERENCE_GENNOME_PATH_FILE_PAIR (.txt)
+-A PAIR-END_ANNOTATION_PATH_FILE (.txt)
 #########################################################
 
 -S SSERAFIM_PATH    Sserafim path
