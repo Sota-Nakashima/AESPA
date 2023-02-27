@@ -110,12 +110,12 @@ OUTPUT_DIR
                 │       :
 ```
 ## Install
-- create virtual environment in conda.  
+- Create virtual environment in conda.  
   AESPA can run the same environment to SSERAFIM. Please show [SSERSFIM](https://github.com/Sota-Nakashima/SSERAFIM).
-- use docker (still getting ready)
+- Use docker (still getting ready)
 
 ## Benchmark
-still getting ready
+Still getting ready
 ## Acknowledgements
 [Evolutionary Genetics Lab](http://www.biology.kyushu-u.ac.jp/~kteshima/), [Kyushu Univ.](https://www.kyushu-u.ac.jp/en/)
 ## Licence
