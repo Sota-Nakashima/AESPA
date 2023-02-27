@@ -138,7 +138,8 @@ OUTPUT_DIR
 ## Install
 - Create virtual environment in conda.  
   AESPA can run the same environment to SSERAFIM. Please show [SSERSFIM](https://github.com/Sota-Nakashima/SSERAFIM).
-- Use docker (still getting ready)
+- Use docker  
+  Please see [this page](https://github.com/Sota-Nakashima/SEERAFIM_AESPA_docker).
 
 ## Benchmark
 Still getting ready
