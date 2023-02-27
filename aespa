@@ -127,7 +127,40 @@ END
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
-if [[ "$1" == "build" ]] ; then
+while getopts :o:c:t:BhV option
+do
+    case "$option" in
+        o)
+            OUTPUT_DIR=$OPTARG
+            ;;
+        t)
+            SRR_TABLE_PATH=$OPTARG
+            SET_SRR_TABLE_PATH=true
+            ;;
+        B)
+            BUILD_MODE=build
+            ;;
+        c)
+            CONDA_INIT_PATH=$OPTARG
+            ;;
+        h)
+            print_help
+            exit 0
+            ;;
+        V)
+            print_version
+            exit 0
+            ;;
+        :)
+            print_error "option requires an argument -- '$OPTARG'"
+            exit 1
+            ;;
+        \?)
+            print_error "unrecognized option -- '$OPTARG'"
+            exit 1
+            ;;
+    esac
+done
 
     #acquire arguments
     args=${@:2}
