@@ -30,6 +30,8 @@ It estimates the expression level of each gene based on the SRR-List downloaded 
    ```
 
 3. Confirm result and prepare reference genome path file and annotaion path file following console output.  
+   
+   Output example:
    ```
    PAIR-END
 
@@ -58,7 +60,7 @@ It estimates the expression level of each gene based on the SRR-List downloaded 
    ```bash:run.sh
    aespa run -g ~/refernece_single_path.txt -G ~/refernece_pair_path.txt -a ~/annotaion_pair_path.txt -A ~/refernce_pair_path.txt -@ 20 -L
    ```
-   This process is a little more complicated. If you are not sure, [see here]().
+   This process is a little more complicated. If you are not sure, see [example file](https://github.com/Sota-Nakashima/SSERAFIM/tree/images/example_file).
 ## Requirement
 AESPA works on conda, [conda-forge](https://github.com/conda-forge) and [bioconda](https://github.com/bioconda).  
 
