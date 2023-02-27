@@ -139,7 +139,7 @@ if [[ "${SET_SRR_TABLE_PATH}" != "true" ]] ; then
 fi
 
 if [[ ! -e $SRR_TABLE_PATH ]] ; then
-    printf '%s\n\n' "${SCRIPT_NAME}: options path is not exist." 1>&2
+    printf '%s\n\n' "${SCRIPT_NAME}: $SET_SRR_TABLE_PATH is not exist." 1>&2
     print_short_help
     exit 1
 fi

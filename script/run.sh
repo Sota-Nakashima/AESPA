@@ -176,6 +176,8 @@ do
     esac
 done
 
+###################################################
+
 #check conda path
 if [[ ! -e $CONDA_INIT_PATH ]] ; then
     printf '%s\n\n' "${SCRIPT_NAME}: you have to check CONDA_INIT_PATH. please use -c option." 1>&2
@@ -187,38 +189,69 @@ fi
 if type "$SSERAFIM_PATH" > /dev/null 2>&1; then
     echo "Confirmed SSERAFIM..." 
 else
-    echo "Not exist SSERAFIM. Please install and add path or use -S option." 1>&2
+    echo "${SCRIPT_NAME}: Not exist SSERAFIM. Please install and add path or use -S option." 1>&2
     exit 1
+fi
+
+#judge parallel int
+##########################################
+if [[ ! "$PALARREL" =~ ^[0-9]+$ ]]; then
+    printf '%s\n\n' "${SCRIPT_NAME}: parallel option need integer more than 0" 1>&2
+    print_short_help
+    exit 1   
 fi
 
 #check "aespa build" command
 if [[ ! -f $OUTPUT_DIR/.aespa ]] ; then
-    echo "Did you do \"aespa build\"?" 1>&2
+    echo "${SCRIPT_NAME}: Did you do \"aespa build\"?" 1>&2
     exit 1    
 fi
+
+###################################################
+#function
+#judge path exist in input file
+isValid_file_path()
+{
+    IFS=$'\n'
+    local file=(`cat "$1"`)
+    #return IFS default
+    IFS=$' \t\n'
+
+    for line in "${file[@]}"; do
+        if [[ ! -e $line ]] ; then
+            printf '%s\n\n' "${SCRIPT_NAME}: ($2) ${line} is not exist." 1>&2
+            exit 1
+        fi
+    done
+}
+
 
 if [[ -d $OUTPUT_DIR/pair ]] ; then
 
     #check option
     if [[ "${SET_ANNOTATION_PATH_FILE_PAIR}" != "true" || "${SET_GENNOME_PATH_FILE_PAIR}" != "true" ]] ; then
-        printf '%s\n\n' "${SCRIPT_NAME}: need more option" 1>&2
+        printf '%s\n\n' "${SCRIPT_NAME}: (pair-end) need more option" 1>&2
         print_short_help
         exit 1
     fi
     #check path exist
     if [[ ! -e $ANNOTATION_PATH_FILE_PAIR || ! -e $GENNOME_PATH_FILE_PAIR ]] ; then
-        printf '%s\n\n' "${SCRIPT_NAME}: options path is not exist." 1>&2
+        printf '%s\n\n' "${SCRIPT_NAME}: (pair-end) options path is not exist." 1>&2
         print_short_help
         exit 1
     fi
+
+    #check input file path exist
+    isValid_file_path $ANNOTATION_PATH_FILE_PAIR "pair-end"
+    isValid_file_path $GENNOME_PATH_FILE_PAIR "pair-end"
 
     #check matching organism number and input file lines
     organism_number=`count_number_of_lines $OUTPUT_DIR/pair/organism.txt`
 
     if [[ $organism_number -ne `count_number_of_lines $GENNOME_PATH_FILE_PAIR` || \
         $organism_number -ne `count_number_of_lines $ANNOTATION_PATH_FILE_PAIR` ]] ; then
-        echo "(pair-end) Don't match the number of lines between organism and input file." 1>&2
-        echo "(pair-end) Please check forgetting inserting LF in a last line."
+        echo "${SCRIPT_NAME}: (pair-end) Don't match the number of lines between organism and input file." 1>&2
+        echo "${SCRIPT_NAME}: (pair-end) Please check forgetting inserting LF in a last line."
         exit 1
     fi
 
@@ -228,28 +261,34 @@ if [[ -d $OUTPUT_DIR/single ]] ; then
 
     #check option
     if [[ "${SET_ANNOTATION_PATH_FILE_SINGLE}" != "true" || "${SET_GENNOME_PATH_FILE_SINGLE}" != "true" ]] ; then
-        printf '%s\n\n' "${SCRIPT_NAME}: need more option" 1>&2
+        printf '%s\n\n' "${SCRIPT_NAME}: (single-end) need more option" 1>&2
         print_short_help
         exit 1
     fi
     #check path exist
     if [[ ! -e $ANNOTATION_PATH_FILE_SINGLE || ! -e $GENNOME_PATH_FILE_SINGLE ]] ; then
-        printf '%s\n\n' "${SCRIPT_NAME}: options path is not exist." 1>&2
+        printf '%s\n\n' "${SCRIPT_NAME}: (single-end) options path is not exist." 1>&2
         print_short_help
         exit 1
     fi
+
+    #check input file path exist
+    isValid_file_path $ANNOTATION_PATH_FILE_SINGLE "single-end"
+    isValid_file_path $GENNOME_PATH_FILE_SINGLE "single-end"
 
     #check matching organism number and input file lines
     organism_number=`count_number_of_lines $OUTPUT_DIR/single/organism.txt`
 
     if [[ $organism_number -ne `count_number_of_lines $GENNOME_PATH_FILE_SINGLE` || \
         $organism_number -ne `count_number_of_lines $ANNOTATION_PATH_FILE_SINGLE` ]] ; then
-        echo "(single-end) Don't match the number of lines between organism and input file." 1>&2
-        echo "(single-end) Please check forgetting inserting LF in a last line." 1>&2
+        echo "${SCRIPT_NAME}: (single-end) Don't match the number of lines between organism and input file." 1>&2
+        echo "${SCRIPT_NAME}: (single-end) Please check forgetting inserting LF in a last line." 1>&2
         exit 1
     fi
 
 fi
+
+###################################################
 
 #create path set and core program
 
@@ -270,7 +309,7 @@ if [[ -d $OUTPUT_DIR/pair ]] ; then
         "$SSERAFIM_PATH" -o "$OUTPUT_DIR/pair/${args[0]}" -a "${args[2]}" -g "${args[1]}" \
         -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH -P "$LIGHT_MODE"
         if [ $? -ne 0 ]; then
-            echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"." 1>&2
+            echo "${SCRIPT_NAME}: sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"." 1>&2
             exit 1
         fi
     done
@@ -298,7 +337,7 @@ if [[ -d $OUTPUT_DIR/single ]] ; then
         "$SSERAFIM_PATH" -o "$OUTPUT_DIR/single/${args[0]}" -a "${args[2]}" -g "${args[1]}" \
         -s "${args[3]}" -@ $PALARREL -c $CONDA_INIT_PATH "$LIGHT_MODE"
         if [ $? -ne 0 ]; then
-            echo "sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"." 1>&2
+            echo "${SCRIPT_NAME}: sserafim encountered error. Please check \"{ORGASIM_NAME}/report.log\"." 1>&2
             exit 1
         fi
     done
