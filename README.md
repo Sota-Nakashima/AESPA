@@ -29,7 +29,31 @@ It estimates the expression level of each gene based on the SRR-List downloaded 
    aespa build -t ~/SraRunTable.txt
    ```
 
-3. Confirm result and prepare reference genome path file and annotaion path file following console output
+3. Confirm result and prepare reference genome path file and annotaion path file following console output.  
+   ```
+   PAIR-END
+
+   *organism*
+   Homo_sapiens
+
+   Please prepare each absolute path list (.txt) of these reference genomes (.fasta) and anotations (.gtf).
+   Use -g and -a option.
+
+   SINGLE-END
+
+   *organism*
+   Gallus_gallus
+   Gorilla_gorilla
+   Homo_sapiens
+   Macaca_mulatta
+   Monodelphis_domestica
+   Mus_musculus
+   Ornithorhynchus_anatinus
+   Xenopus_tropicalis
+
+   Please prepare each absolute path list (.txt) of these reference genomes (.fasta) and anotations (.gtf).
+   Use -G and -A option.
+   ```
 4. Run AESPA in run mode
    ```bash:run.sh
    aespa run -g ~/refernece_single_path.txt -G ~/refernece_pair_path.txt -a ~/annotaion_pair_path.txt -A ~/refernce_pair_path.txt -@ 20 -L
