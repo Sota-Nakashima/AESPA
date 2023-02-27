@@ -7,7 +7,7 @@ SRR_TABLE_PATH=$4
 
 source $CONDA_INIT_PATH
 
-conda activate bio
+conda activate sserafim
 
 python -B $SCRIPT_DIR/create_df.py $OUTPUT_DIR $SRR_TABLE_PATH
 

@@ -8,6 +8,6 @@ ANNOTATION_PATH_FILE_PAIR=$5
 
 source $CONDA_INIT_PATH
 
-conda activate bio
+conda activate sserafim
 
 python -B $SCRIPT_DIR/create_path_df.py $OUTPUT_DIR $GENNOME_PATH_FILE_PAIR $ANNOTATION_PATH_FILE_PAIR
