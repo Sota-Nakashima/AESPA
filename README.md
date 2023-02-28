@@ -4,7 +4,7 @@ AESPA
 [![Version](https://img.shields.io/badge/OS-Linux-gree)](https://github.com/Sota-Nakashima/AESPA)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/Sota-Nakashima/AESPA/blob/main/LICENCE)
 #  Overview
-AESPA is a SSERAFIM lapper tool.  
+AESPA is a SSERAFIM wrapper tool.  
 AESPA makes AESPA support multiple spicies.  
 
 |    | SSERAFIM only | AESPA & SSEARFIM |
@@ -60,7 +60,7 @@ It estimates the expression level of each gene based on the SRR-List downloaded 
    ```bash:run.sh
    aespa run -g ~/refernece_single_path.txt -G ~/refernece_pair_path.txt -a ~/annotaion_pair_path.txt -A ~/refernce_pair_path.txt -@ 20 -L
    ```
-   This process is a little more complicated. If you are not sure, see [example file](https://github.com/Sota-Nakashima/SSERAFIM/tree/images/example_file).
+   This process is a little more complicated. If you are not sure, see [example file](https://github.com/Sota-Nakashima/AESPA/tree/sample/example_file).
 ## Requirement
 AESPA works on conda, [conda-forge](https://github.com/conda-forge) and [bioconda](https://github.com/bioconda).  
 

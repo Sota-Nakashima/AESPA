@@ -14,7 +14,7 @@ print_help()
  ■■■■■■  ■          ■ ■      ■■■■■■  
  ■    ■■ ■         ■■ ■      ■    ■■ 
 ■■     ■ ■■■■■  ■■■■  ■     ■■     ■
-This program is lapper program of SSERAFIM. This makes SSERAFIM analyze multi spicies.
+This program is wrapper program of SSERAFIM. This makes SSERAFIM analyze multi spicies.
 This program depends on SSERAFIM. Please install SSERAFIM and pass through.
 If you want to choose another parameters in each process, please rewrite programs by yourself.
 <build mode>
