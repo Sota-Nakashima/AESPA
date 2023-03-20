@@ -142,7 +142,7 @@ OUTPUT_DIR
   Please see [this page](https://github.com/Sota-Nakashima/Docker).
 
 ## Benchmark
-Still getting ready
+See [SSERAFIM](https://github.com/Sota-Nakashima/SSERAFIM).
 ## Acknowledgements
 [Evolutionary Genetics Lab](http://www.biology.kyushu-u.ac.jp/~kteshima/), [Kyushu Univ.](https://www.kyushu-u.ac.jp/en/)
 ## Licence
