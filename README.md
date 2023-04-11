@@ -2,7 +2,7 @@ AESPA
 ====
 [![Version](https://img.shields.io/badge/stable-main-gree)](https://github.com/Sota-Nakashima/AESPA)
 [![Version](https://img.shields.io/badge/OS-Linux-gree)](https://github.com/Sota-Nakashima/AESPA)
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/Sota-Nakashima/AESPA/blob/main/LICENCE)
+[![GPL v3 License](http://img.shields.io/badge/license-GPL_v3-blue.svg?style=flat)](https://github.com/Sota-Nakashima/AESPA/blob/main/LICENSE)
 #  Overview
 AESPA is a SSERAFIM wrapper tool.  
 AESPA makes AESPA support multiple spicies.  
@@ -145,9 +145,9 @@ OUTPUT_DIR
 See [SSERAFIM](https://github.com/Sota-Nakashima/SSERAFIM).
 ## Acknowledgements
 [Evolutionary Genetics Lab](http://www.biology.kyushu-u.ac.jp/~kteshima/), [Kyushu Univ.](https://www.kyushu-u.ac.jp/en/)
-## Licence
+## License
 
-[MIT](https://github.com/Sota-Nakashima/SSERAFIM/blob/main/LICENCE)
+[GPL v3](https://github.com/Sota-Nakashima/SSERAFIM/blob/main/LICENSE)
 
 ## Author
 
