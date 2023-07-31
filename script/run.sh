@@ -332,6 +332,8 @@ if [[ -d $OUTPUT_DIR/single ]] ; then
     #return IFS default
     IFS=$' \t\n'
 
+    #sserafim
+    echo "running sserafim..."
     for line in "${file[@]}"; do
         args=($line)
         "$SSERAFIM_PATH" -o "$OUTPUT_DIR/single/${args[0]}" -a "${args[2]}" -g "${args[1]}" \
